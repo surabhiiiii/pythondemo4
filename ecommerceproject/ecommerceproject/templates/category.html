@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+{% if category %}
+{{ category.description|truncatewords:155 }}
+{% else %}
+welcome to stationary shop.you can buy different items
+{% endif %}
+{% endblock %}
+{% block title %}
+{% if category %}
+{{ category.name }}
+{% else %}
+see our new collections
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if category %}
+
+<div>
+    <div class="row my_row_class">
+        <div class="mx_auto">
+            <p><a href="{% url 'shop:allproductcat' %}">our product collections</a></p>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="mx_auto">
+    {% if category %}
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}">
+        </div>
+        <div class="col-4"></div>
+        <br>
+        <div>
+            <h1 class="text-center my_title">{{category.name}}</h1>
+            <p class="text-justify">{{category.description}}</p>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4">
+                <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="our product">
+            </div>
+            <div class="col-4"></div>
+            <br>
+            <div>
+                <h1 class="text-center my_title">History of stationery</h1>
+                <p class="text-center">
+                    Originally, the term 'stationery' referred to all products sold by a stationer, whose name indicated
+                    that his book shop was on a fixed spot. This was usually somewhere near a university, and permanent,
+                    while medieval trading was mainly carried on by itinerant peddlers (including chapmen, who sold
+                    books) and others (such as farmers and craftsmen) at markets and fairs. It was a unique term used
+                    between the 13th and 15th centuries in the manuscript culture. Stationers' shops were places where
+                    books were bound, copied, and published. These shops often loaned books to nearby university
+                    students for a fee. The books were loaned out in sections, allowing students to study or copy them,
+                    and the only way to get the next part of the book was to return the previous section.[2] In some
+                    cases, stationers' shops became the preferred choice for scholars to find books, instead of
+                    university libraries due to stationers' shops' wider collection of books.[3] The Stationers' Company
+                    formerly held a monopoly over the publishing industry in England and was responsible for copyright
+                    regulations.</p>
+            </div>
+            {% endif %}
+
+            <div class="container">
+                <div class="row mx_auto">
+                    {% for product in products.object_list %}
+                    <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-lg-4">
+
+                        <div class="card text-center" style="min-width: 18rem;">
+                            <a href="{{product.get_url}}"><img class="card-img-top my_image" src="{{product.image.url}}" alt="{{product.name}}"></a>
+                        <div class="card-body">
+                            <h4>{{product.name}}</h4>
+                            <p>{{product.price}}</p>
+                        </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            <div class="mx_auto">
+                {% if products.paginator.num_pages > 1 %}
+                <hr>
+                <div class="text-center">
+                    {% for pg in products.paginator.page_range %}
+                        <a href="?page={{pg}}" class="btn-btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+                    {% endfor %}
+             
+               </div>  
+               {% endif %}     
+            </div>
+            <br>
+        </div>
+        {% endblock %}
